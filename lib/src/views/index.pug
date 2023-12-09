@@ -1,0 +1,43 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    //- fontawesome
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" )
+    //- mystyle sheet
+    link(rel='stylesheet', href='../stylesheets/index.css')
+    title Homepage
+  body#body
+    header#header
+      .left-icon
+        img(src="../img/note-icon.png", alt="", srcset="")
+        a.left-icon-text(href='/') NOTES ON THE GO! 
+      .right-btn-wrapper
+        <i class="fa-solid fa-moon night-mode" id="night-mode"></i> 
+    .main-body-wrapper
+      .left-wrapper
+        h1.main-heading
+            |  Create your
+            span.less  Notes
+            br
+            |  on the go!
+
+        p.description-text
+          | You don't have to take your notes 
+          br
+          | everywhere you go, create one now 
+          br
+          | and access it anywhere. 
+        
+        .btn-wrapper
+          a(class="sign-up-btn", href="/users/signup") Sign up
+          a(class="login-btn", id="login-btn", href="/users/login") Login
+        
+        .view-gallery-btn-wrapper
+          a(class="view-gallery-btn", href="/notes") View notes 
+         
+      .right-wrapper
+        img(src="../img/bb.png", alt="", srcset="")
+    
+  script(src="../js/index.js")

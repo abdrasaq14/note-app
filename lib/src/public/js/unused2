@@ -1,0 +1,166 @@
+// const path = require('node:path')
+
+// const mydpPath = path.resolve(__dirname, "../../", "usersAndNote.db");
+// const sqlite3 = require("sqlite3").verbose();
+// const db = new sqlite3.Database(
+//   mydpPath,
+//   sqlite3.OPEN_READWRITE,
+//   (err) => {
+//     if (err) return err;
+//   }
+// );
+
+
+
+
+// async function fetchDataForNoteId(noteId) {
+//     const objectData = {};
+//   const databaseDetail = await new Promise((resolve, reject) => {
+//     const sql = 'SELECT * FROM Notes WHERE NoteCode = ?';
+
+//     db.get(sql, [noteId], (err, row) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(Object.assign(objectData, row));
+//       }
+
+      
+//     });
+//   })
+//   return objectData
+// }
+
+// async function main(){
+// const result = await fetchDataForNoteId('database8')
+// console.log(result)
+// }
+// main()
+
+
+const path = require('node:path')
+const mydpPath = path.resolve(__dirname, "../../", "usersAndNote.db");
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database(
+  mydpPath,
+  sqlite3.OPEN_READONLY,
+  (err) => {
+    if (err) return err;
+  }
+);
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const editBtn = document.querySelectorAll(".edit-notes");
+    const eachPop = document.getElementById("each-note-display");
+    const addNewNoteBtn = document.getElementById("add-new-notes");
+    const newNotePop = document.getElementById("add-new-note-pop-up");
+  
+    editBtn.forEach((item) => {
+      item.addEventListener("click", displayMyPop);
+    });
+  
+    addNewNoteBtn.addEventListener("click", displayNewNote);
+  
+    // Closing the edit note pop up
+    let close_btn = document.querySelectorAll(".cancel-btn");
+    close_btn.forEach((btn) => {
+      btn.addEventListener("click", closePopup);
+    });
+  
+    // Closing the new note pop up
+    let newNoteCloseBtn = document.querySelectorAll(".cancel-btn");
+    newNoteCloseBtn.forEach((btn) => {
+      btn.addEventListener("click", closeNewNotePopup);
+    });
+  
+    async function fetchDataForNoteId(noteId) {
+      const path = require('node:path')
+      const mydpPath = path.resolve(__dirname, "../../", "usersAndNote.db");
+      const sqlite3 = require("sqlite3").verbose();
+      const db = new sqlite3.Database(
+        mydpPath,
+        sqlite3.OPEN_READONLY,
+        (err) => {
+          if (err) return err;
+        }
+      );
+      const objectData = {};
+      return await new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Notes WHERE NoteCode = ?';
+  
+        db.get(sql, [noteId], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(Object.assign(objectData, row));
+          }
+        });
+      });
+    }
+  
+    function editNote(noteData) {
+      eachPop.style.display = "flex";
+      eachPop.style.flexDirection = "column";
+      eachPop.style.alignItems = "center";
+      eachPop.style.justifyContent = "center";
+  
+      document.getElementById("title").value = noteData.Title;
+      document.getElementById("description").value = noteData.Description;
+      document.getElementById("dueDate").value = noteData.DueDate;
+      document.getElementById("status").value = noteData.Status;
+    }
+  
+    function displayMyPop(e) {
+      if (e.target.classList.contains("edit-notes")) {
+        const noteId = e.target.getAttribute("data-id");
+  
+        fetchDataForNoteId(noteId)
+          .then((noteData) => {
+            editNote(noteData);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    }
+  
+    function displayNewNote() {
+      newNotePop.style.display = "flex";
+      newNotePop.style.flexDirection = "column";
+      newNotePop.style.alignItems = "center";
+      newNotePop.style.justifyContent = "center";
+    }
+  
+    function closePopup() {
+      eachPop.style.display = "none";
+    }
+  
+    function closeNewNotePopup() {
+      newNotePop.style.display = "none";
+    }
+  
+    // Code to send a POST request to the delete route
+    async function deleteNote(noteId) {
+      try {
+        const token = localStorage.getItem("mytoken");
+  
+        const response = await fetch("http://localhost:3000/notes/dashboard/delete-note", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ noteId }),
+        });
+  
+        const result = await response.json();
+        console.log(result);
+  
+        location.reload();
+      } catch (error) {
+        console.error("Error deleting note:", error);
+      }
+    }
+  });
+  

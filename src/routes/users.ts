@@ -1,9 +1,10 @@
 import createError from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
-import getAllUserMiddleware from "../controller/getAllUser";
-import signupMiddleware from '../controller/signup';
-import loginController from '../controller/login'
-
+import signupPage from "../controller/signupDisplayPage";
+import { signupUserFunction } from '../controller/signup';
+import loginDisplayPage from '../controller/loginDisplayPage';
+import { handleUserLogin } from '../controller/login'
+import { userLogin } from "../controller/login copy";
 // implementation start here
 const router = express.Router();
 
@@ -11,12 +12,14 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: false }));
 
 // GET all users route
-router.get("/", getAllUserMiddleware);
+router.get("/signup", signupPage)
 
 // Creating new user
-router.post("/signup", signupMiddleware);
+router.post("/signup", signupUserFunction);
 
 // new user login
-router.post("/login", loginController);
+router.get("/login", loginDisplayPage);
+
+router.post("/login", handleUserLogin);
 
 export default router;

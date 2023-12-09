@@ -1,0 +1,41 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel='stylesheet', href='../stylesheets/notes.css')
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" )
+        title Notes page
+    body 
+        header#header
+            .left-icon
+                img(src="../img/note-icon.png", alt="", srcset="")
+                a.left-icon-text(href='/') NOTES ON THE GO! 
+            .search-icon-wrapper
+                //- i.fa-solid.fa-magnifying-glass.search-icon
+                input.search-input(type='text', placeholder='Search Note', class="search-input")
+            .right-btn-wrapper
+                a.sign-up(href='/users/signup') Sign up
+                a.login(href='/users/login') Login
+        
+        .item-wrapper
+            ul 
+                each note in notes 
+                    li
+                        h2 #{note.Title}
+                        p 
+                            strong Description: 
+                            | #{note.Description}
+                        p 
+                            strong Status: 
+                            | #{note.Status}
+                        p 
+                            strong Due Date: 
+                            | #{note.DueDate}
+                        p 
+                            strong Note Code: 
+                            | #{note.NoteCode}                        
+
+        script(src="../js/notes.js")  
+        
+

@@ -1,12 +1,14 @@
 import { AuthenticatedRequest } from '../../express'; 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-
+import path from 'node:path'
 
 
 const sqlite3 = require("sqlite3").verbose();
+// my database
+const mydpPath = path.resolve(__dirname, '../', 'usersAndNote.db')
 const db = new sqlite3.Database(
-  "/Users/macbook/Desktop/week-6-pod-d-abdrasaq14/lib/src/usersAndNote.db",
+  mydpPath,
   sqlite3.OPEN_READWRITE,
   (err: any) => {
     if (err) return console.log(err);
@@ -15,11 +17,9 @@ const db = new sqlite3.Database(
 
 async function authenticate(req: AuthenticatedRequest, res: Response, next: NextFunction){
   // @ts-ignore
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  // const token = req.query.token as string;
-
+  const token = req.session.token || req.headers.authorization?.replace('Bearer ', '') || req.headers.Authorization?.replace('Bearer ', '');
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.redirect("../users/login");
   }
 
   try {
@@ -46,8 +46,10 @@ async function authenticate(req: AuthenticatedRequest, res: Response, next: Next
     else{
       // get userid from the login and passing to the next function
       req.user = { UserId: userIdFromDatabase.UserId }; // Attach the user to the request for further use
-    }
+      
     next();
+  }
+    
   } catch (error) {
     console.error(error);
     res.status(401).json({ message: 'Unauthorized' });

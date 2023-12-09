@@ -1,3 +1,4 @@
+import { config } from 'dotenv';
 import createError from 'http-errors';
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
@@ -5,9 +6,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import indexRouter from './routes/index';
-import registerNewUser from './routes/users';
-import usersLoginRouter from './controller/login';
-import signUpRouter from './controller/signup';
+import usersRouter from './routes/users';
 import notesRouter from './routes/notes';
 import session from "express-session";
 
@@ -24,21 +23,22 @@ app.use(
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, './', 'public')));
 
 
 app.use('/', indexRouter);
-app.use('/signup', signUpRouter);
+
 // this is where cookie comes handy, kindly search how to automatically login after signup
-app.use('/login', usersLoginRouter);
-app.use('/users', registerNewUser);
+
+app.use('/users', usersRouter);
+
 app.use('/notes', notesRouter);
 
 // catch 404 and forward to error handler

@@ -1,0 +1,105 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel='stylesheet', href='../stylesheets/dashboard.css')
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" )
+    title Notes page
+  body#body
+    header#header
+      .left-icon
+        img(src="../img/note-icon.png", alt="", srcset="")
+        a.left-icon-text(href='/notes/dashboard') NOTES ON THE GO! 
+      .search-icon-wrapper
+        //- i.fa-solid.fa-magnifying-glass.search-icon
+        input.search-input(type='text', placeholder='Search Note', class="search-input")
+      .right-btn-wrapper
+        a(href="/notes", class="sign-out-text") Sign out 
+          | 
+          span.sign-out-wrapper 
+            <i class="fa-solid fa-right-from-bracket sign-out-icon"></i>   
+        <i class="fa-solid fa-moon night-mode" id="night-mode"></i> 
+    .body-wrapper   
+      each user of queryUserTable
+        h1.welcome-text Hi, 
+          | 
+          span.user-name-text #{user.Full_name}
+          |
+          span.exclamation !
+      
+      if notes.length == 0
+        p.no-note-length You note list is empty, kindly click on the button below to create one.
+      
+      button#add-new-notes Click to add new note
+      
+      if deletedNote
+        p.deleted-note-para #{deletedNote}
+      else if deletingError 
+        p.error-deleting #{deletingError}
+        
+      else if notes.length >= 1 
+        .existing-note-wrapper 
+          h1.existing-note Your Notes
+          img(src="../img/curve.png", alt="", class="existing-note-img", srcset="")
+      ul 
+        each note in notes
+          li
+            h2 #{note.Title}
+            p 
+              strong Description: 
+                | #{note.Description}          
+            p 
+              strong Status: 
+                | #{note.Status}
+            p 
+              strong Due Date: 
+                | #{note.DueDate}
+            p 
+              strong Note Code: 
+                | #{note.NoteCode}              
+          
+            div.edit-and-delete-button-wrapper    
+              button.edit-notes(data-id=note.NoteCode) Edit Note
+              button.delete-note(onclick=`deleteNote('${note.NoteCode}')`) Delete Note
+
+          div#each-note-display
+            form(action='/notes/dashboard/edit', method='post', enctype="application/x-www-form-urlencoded")
+               
+              input(type='hidden', id='noteId', name='noteId', value=note.NoteId)
+              label(for='title') Title:
+              input(type='text', id='title', name='title', value=note.Title, required)
+
+              label(for='description') Description:
+              input(type='text', id='description', name='description', value=note.Description)
+
+              label(for='dueDate') Due Date:
+              input(type='text', id='dueDate', name='dueDate', value=note.DueDate)
+
+              label(for='status') Status:
+              input(type='text', id='status', name='status', value=note.Status, required)
+
+              div.button-wrapper    
+                button.submit-btn(type='submit') Save Changes
+                button.cancel-btn Cancel Edit
+
+    div#add-new-note-pop-up
+      form(action='/notes/dashboard/add-new-note', method='post', enctype="application/x-www-form-urlencoded")
+        //- Populate the input fields with note data
+        label(for='title') Title:
+        input(type='text', id='title', name='Title', required, placeholder='Enter the note title here')
+
+        label(for='description') Description:
+        input(type='text', id='description', name='Description', placeholder='Enter the note description here')
+
+        label(for='dueDate') Due Date:
+        input(type='text', id='dueDate', name='DueDate', placeholder='Enter the due date e.g 24th of August, 2023')
+
+        label(for='status') Status:
+        input(type='text', id='status', name='Status', required, placeholder='Enter the note status, e.g pending, done')
+
+        div.button-wrapper    
+          button.submit-btn(type='submit') Save note
+          button.cancel-btn(onclick='toggleAddNewNotePopUp()') Cancel
+
+  script(src="../js/dashboard.js")

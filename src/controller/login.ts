@@ -1,18 +1,19 @@
 import createError from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
-import { z } from "zod";
-import bcrypt from 'bcrypt';
+import { ZodError, z } from "zod";
+import bcrypt from "bcrypt";
 import { error } from "console";
-import { Session, SessionData } from 'express-session';
-import jwt from 'jsonwebtoken'
+import { Session, SessionData } from "express-session";
+import jwt from "jsonwebtoken";
+import path from "node:path";
+import { AuthenticatedRequest } from "../../express";
 
-interface AuthenticatedRequest extends Request {
-  session: Session & Partial<SessionData> & { userId?: number };
-}
 const sqlite3 = require("sqlite3").verbose();
 
+// my database
+const mydpPath = path.resolve(__dirname, "../", "usersAndNote.db");
 const db = new sqlite3.Database(
-  "/Users/macbook/Desktop/week-6-pod-d-abdrasaq14/lib/src/usersAndNote.db",
+  mydpPath,
   sqlite3.OPEN_READWRITE,
   (err: any) => {
     if (err) return console.log(err);
@@ -21,71 +22,76 @@ const db = new sqlite3.Database(
 
 // Zod to validate
 const userSchema = z.object({
-    email: z.string({
-        required_error: "email needs to be provided",
-        invalid_type_error: "email needs to be a string",
-      })
-      .email(),
-    password: z.string({
-        required_error: "password needs to be provided",
-        invalid_type_error: "password needs to be a string",
-      }).min(6, "password must be at least 6 characters")
-  });
-  const strictNewUserSchema = userSchema.strict()
-export default async function handleUserLogin(req: AuthenticatedRequest, res: Response, next: NextFunction){
-  try{  
-      const validation = strictNewUserSchema.parse(req.body);
-      const { email, password } = validation;
-  
-      // checking the database for the record of that user
-      const sql = `SELECT * FROM Users WHERE Email = ?;`;
+  email: z
+    .string({
+      required_error: "email needs to be provided",
+      invalid_type_error: "email needs to be a string",
+    })
+    .email(),
+  password: z
+    .string({
+      required_error: "password needs to be provided",
+      invalid_type_error: "password needs to be a string",
+    })
+    .min(6, "password must be at least 6 characters"),
+});
+const strictNewUserSchema = userSchema.strict();
+export async function handleUserLogin(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const validation = strictNewUserSchema.parse(req.body);
+    const { email, password } = validation;
+
+    // checking the database for the record of that user
+    const sql = `SELECT * FROM Users WHERE Email = ?;`;
     //   this is now an array of object for each record
-    const userDetailFromDatabase:Record<string, any> = { }
-      const selectEmailFromDatabase:Record<string, any>[] = await new Promise((resolve, reject) => {
+    const userDetailFromDatabase: Record<string, any> = {};
+    const selectEmailFromDatabase: Record<string, any>[] = await new Promise(
+      (resolve, reject) => {
         db.all(sql, [email], (err: Error, users: any[]) => {
           if (err) {
-            console.error("Error in database operation:", err);
-            reject(res.status(500).json({
-                message: `my error ${error}`
-            }));
+            reject(err);
           } else {
-            
-            return resolve(Object.assign(userDetailFromDatabase, ...users))
+            resolve(Object.assign(userDetailFromDatabase, ...users));
           }
         });
+      }
+    );
+
+    //unauthorized, kindly sign up or request access from admin;
+    if (userDetailFromDatabase.Email !== email) {
+      return res.render("login", {
+        noSuchUserError: `User with email ${email} does not exist,`,
       });
-  
-      
-      //unauthorized, kindly sign up or request access from admin;
-      if (userDetailFromDatabase.Email !== email) {
-        return res.status(401).json({
-            message: `User with email ${email} does not exist, Kindly signup`
-        })
-        } 
-    //   if that user exist, check for password
-        const matchPassword = await bcrypt.compare(password, userDetailFromDatabase.Password)
-        const token = jwt.sign({userId: userDetailFromDatabase.UserId}, 'your-secret-key', { expiresIn: '1h'})
-        if(matchPassword){
-        // res.json({
-        //     message: `User with Email: ${email} is logged in!`,
-        //     token: token
-        // })
-        res.header('Authorization', `Bearer ${token}`);
-           res.json({
-            message: `User with Email: ${email} is logged in!`,
-            token: token
-        })
+    } else {
+      //   if that user exist, check for password
+      const matchPassword = await bcrypt.compare(
+        password,
+        userDetailFromDatabase.Password
+      );
+      if (!matchPassword) {
+        const invalidPassword = `Invalid password, kindly try again`;
+        res.render("login", { invalidPassword: invalidPassword });
+      } else {
+        const token = jwt.sign(
+          { userId: userDetailFromDatabase.UserId },
+          "your-secret-key",
+          { expiresIn: "1h" }
+        );
+        req.session.token = token;
+        req.user = { UserId: userDetailFromDatabase.UserId };
+        res.redirect("/notes/dashboard");
       }
-      else{
-        res.status(401).json({
-            message: `Incorrect password`,
-            "statusCode": 401
-        })
-      }
-      
     }
-    catch(error){
-        res.status(400).json({'message': error});
+  } catch (error) {
+    if (error instanceof ZodError) {
+      const zodErrorMessage = error.issues.map((issue) => issue.message);
+      res.render("login", { zodError: zodErrorMessage });
+    } else if (error) {
+      res.render("login", { error });
     }
- 
-  };
+  }
+}

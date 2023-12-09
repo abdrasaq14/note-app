@@ -1,0 +1,204 @@
+body{
+    height: 100vh;
+    width: 100vw;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    color:#fff;
+    background-image: linear-gradient(to bottom, rgba(4, 38, 81), rgb(40, 4, 81));
+    padding: 0!important;
+    overflow-y: hidden;
+}
+
+.changeBackground{
+    background-image: linear-gradient(to bottom, rgb(255, 255, 255), rgb(255, 255, 255));
+    color: #042651;
+  }
+header{
+    display: flex;
+    /* padding: 1.5rem 2rem; */
+    display: flex;
+    height: 5.5rem;
+    width: 100%;
+    margin-top: -.5rem;
+    flex-direction: row;
+    align-items: center!important;
+    background-color: rgba(4, 38, 81);
+    justify-content: space-around;
+    box-shadow: 0px 8px 25px #000000ba;
+  }
+  
+  .left-icon{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    align-self: center;
+    width: 50%;
+    margin-left: 2rem;
+}
+  .left-icon img{
+    height: 3.5rem;
+    width: 3rem;
+    object-fit: contain;
+  }
+  
+  .left-icon-text{
+    color: #ffc600;
+    font-size: 1.5rem;
+    margin-left: .8rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .right-btn-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 50%;
+    margin-right: 2rem;
+  }
+  
+  .night-mode{
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+
+.main-body-wrapper{
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    @media all and (min-width: 768px) {
+        display: flex;
+        flex-direction: row;
+        /* align-items: stretch; */
+    }
+}
+
+.left-wrapper{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 60%;
+    padding: 2rem;
+      
+}
+
+.main-heading{
+    font-size: 3.5rem;
+    margin-top: 4rem;
+}
+
+.less{
+    color: #ffc600;
+}
+.description-text{
+    font-size: 1.4rem;
+}
+
+.btn-wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 2rem;
+    @media all and (min-width: 768px) {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 50%;
+        align-items: center;
+        
+    }
+}
+.sign-up-btn{
+    background-color: #6124d4;
+    margin: 1rem 1rem 1rem 0;
+    border-radius: 50px;
+    border: none;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+    color: #fff;
+}
+
+.sign-up-btn:hover{
+    background-color: #310484;
+    transition: .5s;
+    font-weight: 700;
+    text-decoration: none;
+}
+.login-btn{
+    background-color: #fff;
+    margin: 1rem;
+    border-radius: 50px;
+    border: 2px solid #fff;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+    color: #042651;
+}
+
+.login-btn:hover{
+    background-color: #dddddd;
+    color: #042651;
+    transition: .5s;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.view-gallery-btn-wrapper{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    font-weight: 700;
+    @media all and (min-width: 768px) {
+        display: flex;
+        justify-content: flex-start;
+        width: 50%;
+        flex-direction: row;
+        align-items: center;
+        
+        
+    }
+}
+
+.view-gallery-btn{
+    background-color: #ffc600;
+    margin: 1rem 1rem 1rem 0;
+    border-radius: 50px;
+    border: none;
+    padding: 1rem 5rem;
+    color: #042651;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.view-gallery-btn:hover{
+    background-color: #af8a03;
+    color: #042651;
+    font-weight: 700;
+    transition: .5s;
+    text-decoration: none;
+}
+.right-wrapper{
+    height: 100%;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 5rem;
+    overflow-y: visible;
+}
+
+.right-wrapper img{
+    height: 105%;
+    width: 105%;
+    margin-left: 5rem;
+    margin-top: -2rem;
+    object-fit: cover;
+}
+

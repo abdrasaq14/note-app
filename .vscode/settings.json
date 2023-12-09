@@ -4,8 +4,8 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "name": "bb",
-            "database": "${workspaceFolder:week-6-pod-d-abdrasaq14}/lib/src/usersAndNote.db"
+            "database": "${workspaceFolder:week-6-pod-d-abdrasaq14 2}/lib/src/usersAndNote.db",
+            "name": "bb"
         }
     ]
 }

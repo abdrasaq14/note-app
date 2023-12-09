@@ -1,0 +1,44 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title Login Page
+    link(rel='stylesheet', href='../stylesheets/login.css')
+  body
+    
+    if zodError
+      p.zod-error Error: #{zodError}
+
+    else if error 
+      p.database-error Error: #{error}
+    else if invalidPassword 
+      p.database-error Error: #{invalidPassword}
+    else if noSuchUserError
+      p.no-such-user-error
+        | #{noSuchUserError}
+        br
+        | Click
+        a(href="/users/signup", class="signup-link")  here   
+        | to signup
+
+    else if invalidPassword 
+      p.invalid-password Error: #{invalidPassword}
+    else if success 
+      p.success-message Success: #{success}
+
+    form(action='/users/login', method='post')
+      h1 Login Page
+      label(for='email') 
+        | Email:
+      br
+      input(type='email', id='email', name='email', required)
+
+      br
+      label(for='password') 
+        | Password:
+      br
+      input(type='password', id='password', name='password', required)
+      br
+      .btn-wrapper
+        button(type='submit') Login

@@ -1,0 +1,75 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel='stylesheet', href='../stylesheets/dashboard.css')
+    title Notes page
+  body 
+    h1 Notes
+    button#add-new-notes Add New Note
+    if deletedNote
+        p.deleted-note-para #{deletedNote}
+    else if deletingError 
+        p.error-deleting #{deletingError}
+    ul 
+      each note in notes 
+        li
+          h2 #{note.Title}
+          p 
+            strong Description: 
+              | #{note.Description}          
+          p 
+            strong Status: 
+              | #{note.Status}
+          p 
+            strong Due Date: 
+              | #{note.DueDate}
+          p 
+            strong Note Code: 
+              | #{note.NoteCode}              
+          
+          div.edit-and-delete-button-wrapper    
+                button.edit-notes(data-id=note.NoteId) Edit Note
+                button.delete-note(onclick=`deleteNote('${note.NoteCode}')`) Delete Note
+
+        div#each-note-display
+            form(action='/notes/dashboard/edit', method='post', enctype="application/x-www-form-urlencoded")
+                //- Populate the input fields with note data
+                input(type='hidden', id='noteId', name='noteId', value=note.NoteId)
+                label(for='title') Title:
+                input(type='text', id='title', name='title', value=note.Title, required)
+
+                label(for='description') Description:
+                input(type='text', id='description', name='description', value=note.Description)
+
+                label(for='dueDate') Due Date:
+                input(type='text', id='dueDate', name='dueDate', value=note.DueDate)
+
+                label(for='status') Status:
+                input(type='text', id='status', name='status', value=note.Status, required)
+
+                div.button-wrapper    
+                    button.submit-btn(type='submit') Save Changes
+                    button.cancel-btn Cancel Edit
+        
+        div#add-new-note-pop-up
+            form(action='/notes/dashboard/add-new-note', method='post', enctype="application/x-www-form-urlencoded")
+                //- Populate the input fields with note data
+                label(for='title') Title:
+                input(type='text', id='title', name='Title', required)
+
+                label(for='description') Description:
+                input(type='text', id='description', name='Description')
+
+                label(for='dueDate') Due Date:
+                input(type='text', id='dueDate', name='DueDate')
+
+                label(for='status') Status:
+                input(type='text', id='status', name='Status', required)
+
+                div.button-wrapper    
+                    button.submit-btn(type='submit') Save Changes
+                    button.cancel-btn Cancel Edit
+ 
+  script(src="../js/dashboard.js")

@@ -1,0 +1,66 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title Signup Page
+    link(rel='stylesheet', href='../stylesheets/signup.css')
+  body
+    
+  if zodError
+    p.zod-error #{zodError}
+  else if databaseError
+    p.database-error #{databaseError}
+  else if EmailExistError 
+    p.email-exist-error #{EmailExistError}
+      |   Click
+      a(href="/users/login", class="login-link")   here  
+      | to login 
+  if insertUserDetailIntoDatabase 
+    p.account-successfull-message #{insertUserDetailIntoDatabase}
+      | ,   Click
+      a(href="/users/login", class="login-link")   here  
+      | to login
+    
+  form(action='/users/signup', method='post', enctype="application/x-www-form-urlencoded")
+    h1 Signup Page
+    label(for='fullname')
+      | Full Name:
+    br
+    input(type='text', id='fullname', name='fullname', required)
+    
+    br
+    label(for='gender')
+      | Gender:
+    br
+    input(type='text', id='gender', name='gender')
+    
+    br
+    label(for='email')
+      | Email:
+    br
+    input(type='email', id='email', name='email', required)
+    
+    br
+    label(for='phone')
+      | Phone:
+    br
+    input(type='text', id='phone', name='phone', required)
+    
+    br
+    label(for='address')
+      | Address:
+    br
+    input(type='text', id='address', name='address')
+
+    br
+    label(for='password')
+      | Password:
+    br
+    input(type='password', id='password', name='password', required)
+
+    .btn-wrapper
+      button(type='submit') Signup
+
+
+    
