@@ -108,6 +108,7 @@ header{
   border-radius: 50px;
   font-weight: 700;
   margin-right: 3rem;
+  cursor: pointer;
   text-decoration: none;
 
 }
@@ -124,10 +125,11 @@ header{
 .sign-out-icon{
   color: #042651;
 }
-.night-mode{
+.night-mode, .day-mode{
   color: #fff;
   font-size: 2rem;
   cursor: pointer;
+  display: inline-block;
 }
 
 /* body start here */
@@ -194,17 +196,16 @@ ul {
   padding: 2rem;
   width: 90%;
   margin: 0 auto;
-  
 }
 
 li {
-  width: 22rem;
+  width: 20rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-  margin: 1rem 2rem;
+  margin: 1rem 1.5rem;
   padding: 1rem;
   color: #042651;
   background-color: #fff;
@@ -228,6 +229,9 @@ li:hover{
     width: 100vw;
     position: fixed;
     top: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     z-index: 1000;
     background-color: rgba(25, 25, 25, 0.618);
     backdrop-filter: blur(10px);
@@ -237,9 +241,12 @@ li:hover{
   display: none;
   height: 100vh;
   width: 105vw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   top: 0;
-  margin-left: -5%;
+  margin-left: -10%;
   z-index: 1000;
   background-color: rgba(25, 25, 25, 0.618);
   backdrop-filter: blur(10px);

@@ -124,7 +124,7 @@ export const createNewNoteFunction = async (
 
     if (userId === undefined) {
       const undefinedUserId = `userId undefined, I don't know how you get here`;
-      //res.lorender("dashboard", { undefinedUserId })
+     
       console.log(userId);
     } else {
       const createNewNote = await new Promise((resolve, reject) => {
@@ -140,12 +140,9 @@ export const createNewNoteFunction = async (
               );
               const token = req.session.token;
               req.newUserId = { UserId: userId };
-              console.log(token);
               res.redirect("/notes/dashboard");
               next();
-              // return res.status(200).json({
-              //   message: "New note created successfully",
-              // });
+              
             }
           }
         );
@@ -199,15 +196,15 @@ export const putNewNoteFunction = async (
           resolve(`note updated successfully`);
           //req.jwtSecret = {secretKey: jwtSecret}
           const token = req.session.token;
+          
           res.redirect("/notes/dashboard");
-          next();
         }
       });
     });
   } catch (error) {
     if (error instanceof ZodError) {
       const zodErrorMessage = error.issues.map((issue) => issue.message);
-      res.render("login", { zodError: zodErrorMessage });
+      res.render("dashboard", { zodError: zodErrorMessage });
     } else if (error) {
       res.render("dashboard", { error });
     }

@@ -14,7 +14,9 @@ html(lang="en")
         img(src="../img/note-icon.png", alt="", srcset="")
         a.left-icon-text(href='/') NOTES ON THE GO! 
       .right-btn-wrapper
+        <i class="fa-solid fa-bars small-screen-bar" id="small-screen-bar"></i>
         <i class="fa-solid fa-moon night-mode" id="night-mode"></i> 
+        <i class="fa-solid fa-sun day-mode" id="day-mode"></i>
     .main-body-wrapper
       .left-wrapper
         h1.main-heading
@@ -23,12 +25,7 @@ html(lang="en")
             br
             |  on the go!
 
-        p.description-text
-          | You don't have to take your notes 
-          br
-          | everywhere you go, create one now 
-          br
-          | and access it anywhere. 
+        p.description-text You don't have to take your notes everywhere you go, create one now and access it anywhere. 
         
         .btn-wrapper
           a(class="sign-up-btn", href="/users/signup") Sign up
@@ -39,5 +36,19 @@ html(lang="en")
          
       .right-wrapper
         img(src="../img/bb.png", alt="", srcset="")
-    
+    div#mobile-screen-display
+      .top-icon-wrapper
+        <i class="fa-solid fa-x close-pop-up-icon" id="close-pop-up-icon"></i>
+        .night-day-icon-wrapper
+          <i class="fa-solid fa-moon small-night-mode" id="small-night-mode"></i> 
+          <i class="fa-solid fa-sun small-day-mode" id="small-day-mode"></i>
+      
+      .other-part-wrapper  
+        a(class="users-sign-up", href="/users/signup") 
+          | <i class="fa-solid fa-user-plus"></i> Sign up
+        a(class="users-login", href="/users/login") 
+          | <i class="fa-solid fa-right-to-bracket"></i> Login
+        a(class="view-all-notes", href="/notes")
+          | <i class="fa-solid fa-note-sticky"></i> View gallery
+          
   script(src="../js/index.js")

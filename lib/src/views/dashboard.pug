@@ -15,11 +15,12 @@ html(lang="en")
         //- i.fa-solid.fa-magnifying-glass.search-icon
         input.search-input(type='text', placeholder='Search Note', class="search-input")
       .right-btn-wrapper
-        a(href="/notes", class="sign-out-text") Sign out 
+        a(class="sign-out-text", onclick="clearCookieAndRedirect()") Sign out 
           | 
           span.sign-out-wrapper 
             <i class="fa-solid fa-right-from-bracket sign-out-icon"></i>   
         <i class="fa-solid fa-moon night-mode" id="night-mode"></i> 
+        <i class="fa-solid fa-sun day-mode" id="day-mode"></i>
     .body-wrapper   
       each user of queryUserTable
         h1.welcome-text Hi, 
@@ -60,24 +61,25 @@ html(lang="en")
                 | #{note.NoteCode}              
           
             div.edit-and-delete-button-wrapper    
-              button.edit-notes(data-id=note.NoteCode) Edit Note
+              button.edit-notes(data-note=JSON.stringify(note)) Edit Note
               button.delete-note(onclick=`deleteNote('${note.NoteCode}')`) Delete Note
 
           div#each-note-display
-            form(action='/notes/dashboard/edit', method='post', enctype="application/x-www-form-urlencoded")
+            form(action='/notes/dashboard/edit', method='post', onsubmit="submitForm(event)", enctype="application/x-www-form-urlencoded")
                
-              input(type='hidden', id='noteId', name='noteId', value=note.NoteId)
+              input(type='hidden', id='noteId', name='noteId') 
+
               label(for='title') Title:
-              input(type='text', id='title', name='title', value=note.Title, required)
+              input(type='text', id='title', name='title', required)
 
               label(for='description') Description:
-              input(type='text', id='description', name='description', value=note.Description)
+              input(type='text', id='description', name='description')
 
               label(for='dueDate') Due Date:
-              input(type='text', id='dueDate', name='dueDate', value=note.DueDate)
+              input(type='text', id='dueDate', name='dueDate',)
 
               label(for='status') Status:
-              input(type='text', id='status', name='status', value=note.Status, required)
+              input(type='text', id='status', name='status',)
 
               div.button-wrapper    
                 button.submit-btn(type='submit') Save Changes
@@ -100,6 +102,6 @@ html(lang="en")
 
         div.button-wrapper    
           button.submit-btn(type='submit') Save note
-          button.cancel-btn(onclick='toggleAddNewNotePopUp()') Cancel
+          button.cancel-btn Cancel
 
   script(src="../js/dashboard.js")

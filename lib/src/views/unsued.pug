@@ -73,3 +73,68 @@ html(lang="en")
                     button.cancel-btn Cancel Edit
  
   script(src="../js/dashboard.js")
+
+      let noteCodeFromId = '';
+      editButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          const noteId = button.getAttribute('data-id');
+          noteCodeFromId += noteId
+          const clickedNote = notes.find(note => note.NoteCode === noteId);
+
+          // Populate form fields with note details
+          editTitleInput.value = clickedNote.Title;
+          editDescriptionInput.value = clickedNote.Description;
+          editDueDateInput.value = clickedNote.DueDate;
+          editStatusInput.value = clickedNote.Status;
+
+          // Display the popup
+          editPopup.style.display = 'flex';
+        });
+      });
+
+          async function updateNote() {
+      // Implement the logic to update the note in the database
+      const updatedNote = {
+        Title: document.getElementById('edit-title').value,
+        Description: document.getElementById('edit-description').value,
+        DueDate: document.getElementById('edit-dueDate').value,
+        Status: document.getElementById('edit-status').value,
+      };
+
+      // Perform the update operation (e.g., using fetch or AJAX)
+      await updateNoteInDatabase(updatedNote);
+
+      // Close the popup after updating
+      document.getElementById('edit-popup').style.display = 'none';
+    }
+    // Function to update the note in the database (simulated)
+    async function updateNoteInDatabase(updatedNote) {
+      try {
+        const token = localStorage.getItem('mytoken'); // Use the appropriate method to retrieve the token
+        const idFromAttribute = noteCodeFromId
+        const response = await fetch('http://localhost:3000/notes/dashboard/edit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Include the token in the headers
+          },
+          body: JSON.stringify({ idFromAttribute, updatedNote }), // Include NoteId in the request body
+        });
+
+        const result = await response.json();
+        console.log(result)
+
+      } catch (error) {
+        console.error('Error updating note:', error);
+      }
+    }
+
+    // closing the edit note pop up
+    let closeBtn = document.querySelectorAll(".cancel-btn");
+    for (let i = 0; i < closeBtn.length; i++) {
+      closeBtn[i].addEventListener("click", closePopup);
+    }
+
+    function closePopup() {
+      document.getElementById("each-note-display").style.display = "none";
+    }
