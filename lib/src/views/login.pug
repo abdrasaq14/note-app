@@ -28,17 +28,20 @@ html(lang='en')
       p.success-message Success: #{success}
 
     form(action='/users/login', method='post')
-      h1 Login Page
+      .existing-note-wrapper 
+        h1.existing-note Login
+        img(src="../img/curve.png", alt="", class="existing-note-img", srcset="")
+
       label(for='email') 
         | Email:
       br
-      input(type='email', id='email', name='email', required)
+      input(type='email', id='email', name='email', placeholder="enter your email here", required)
 
       br
       label(for='password') 
         | Password:
       br
-      input(type='password', id='password', name='password', required)
+      input(type='password', id='password', name='password', placeholder="enter your password here", required)
       br
       .btn-wrapper
         button(type='submit') Login

@@ -32,7 +32,8 @@ html(lang="en")
       if notes.length == 0
         p.no-note-length You note list is empty, kindly click on the button below to create one.
       
-      button#add-new-notes Click to add new note
+      button(id="add-new-notes") 
+        | <i class="fa-solid fa-plus plus-icon"></i> Click to add new note
       
       if deletedNote
         p.deleted-note-para #{deletedNote}
@@ -61,8 +62,10 @@ html(lang="en")
                 | #{note.NoteCode}              
           
             div.edit-and-delete-button-wrapper    
-              button.edit-notes(data-note=JSON.stringify(note)) Edit Note
-              button.delete-note(onclick=`deleteNote('${note.NoteCode}')`) Delete Note
+              button(class="edit-notes", data-note=JSON.stringify(note)) 
+                | <i class="fa-solid fa-pen-to-square"></i> Edit Note
+              button(class="delete-note", data-note=JSON.stringify(note)) 
+                | <i class="fa-solid fa-trash"></i> Delete Note
 
           div#each-note-display
             form(action='/notes/dashboard/edit', method='post', onsubmit="submitForm(event)", enctype="application/x-www-form-urlencoded")
@@ -70,24 +73,29 @@ html(lang="en")
               input(type='hidden', id='noteId', name='noteId') 
 
               label(for='title') Title:
-              input(type='text', id='title', name='title', required)
+              input(type='text', id='title', name='Title', required, placeholder='Enter the note title here')
 
               label(for='description') Description:
-              input(type='text', id='description', name='description')
+              input(type='text', id='description', name='Description', placeholder='Enter the note description here')
 
               label(for='dueDate') Due Date:
-              input(type='text', id='dueDate', name='dueDate',)
+              input(type='date', id='dueDate', name='DueDate', placeholder='Enter the due date e.g 24th of August, 2023')
 
-              label(for='status') Status:
-              input(type='text', id='status', name='status',)
-
+              label(for='status', class="status-label") Status:
+                .status-option-wrapper
+                  input(type='radio', id='statusConfirmed' class="status-input", name='Status', value='Confirmed', required)
+                  label(for='status-confirmed', class="status-confirmed",) Confirmed
+                  
+                              
+                .status-option-wrapper
+                  input(type='radio', id='statusPending', class="status-input", name='Status', value='Pending', required)                 
+                  label(for='status-pending', class="status-pending") Pending
               div.button-wrapper    
                 button.submit-btn(type='submit') Save Changes
                 button.cancel-btn Cancel Edit
 
     div#add-new-note-pop-up
       form(action='/notes/dashboard/add-new-note', method='post', enctype="application/x-www-form-urlencoded")
-        //- Populate the input fields with note data
         label(for='title') Title:
         input(type='text', id='title', name='Title', required, placeholder='Enter the note title here')
 
@@ -95,13 +103,27 @@ html(lang="en")
         input(type='text', id='description', name='Description', placeholder='Enter the note description here')
 
         label(for='dueDate') Due Date:
-        input(type='text', id='dueDate', name='DueDate', placeholder='Enter the due date e.g 24th of August, 2023')
+        input(type='date', id='dueDate', name='DueDate', placeholder='Enter the due date e.g 24th of August, 2023')
 
-        label(for='status') Status:
-        input(type='text', id='status', name='Status', required, placeholder='Enter the note status, e.g pending, done')
+        label(for='status', class="status-label") Status:
+        .status-option-wrapper
+          input(type='radio', id='status-confirmed' class="status-input", name='Status', value='Confirmed', required)
+          label(for='status-confirmed', class="status-confirmed") Confirmed
+                              
+        .status-option-wrapper
+          input(type='radio', id='status-pending', class="status-input", name='Status', value='Pending', required)            
+          label(for='status-pending', class="status-pending") Pending
 
         div.button-wrapper    
           button.submit-btn(type='submit') Save note
           button.cancel-btn Cancel
+    
+    div#delete-note-pop-up
+      .delete-btn-wrapper 
+        p.are-you-sure Are you sure you want to delete 
+        .confirm-cancel-btn-wrapper
+          button.confirm-btn Yes  
+          button.cancel-btn.no No 
+
 
   script(src="../js/dashboard.js")

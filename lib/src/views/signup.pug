@@ -23,44 +23,53 @@ html(lang='en')
       | to login
     
   form(action='/users/signup', method='post', enctype="application/x-www-form-urlencoded")
-    h1 Signup Page
+    .existing-note-wrapper 
+      h1.existing-note Signup
+      img(src="../img/curve.png", alt="", class="existing-note-img", srcset="")
     label(for='fullname')
       | Full Name:
     br
-    input(type='text', id='fullname', name='fullname', required)
+    input(type='text', id='fullname', name='fullname', placeholder="enter your fullname here", required)
     
     br
-    label(for='gender')
-      | Gender:
+    label(for='status', class="gender-label") Gender:
+      .gender-option-wrapper
+        input(type='radio', id='gender-male' class="gender-input", name='gender', value='Male', required)
+        label(for='gender-male', class="gender-male") Male
+                
+      .gender-option-wrapper
+        input(type='radio', id='gender-female', class="gender-input", name='gender', value='Female', required)   
+        label(for='gender-female', class="gender-female") Female
+      
     br
-    input(type='text', id='gender', name='gender')
-    
-    br
+
     label(for='email')
       | Email:
     br
-    input(type='email', id='email', name='email', required)
+    input(type='email', id='email', name='email', placeholder="enter your email here", required)
     
     br
     label(for='phone')
       | Phone:
     br
-    input(type='text', id='phone', name='phone', required)
+    input(type='text', id='phone', name='phone', required, value='+234', placeholder="enter your phone number without the first 0 digit e.g 8100000000", class='prefilled-phone')
     
     br
     label(for='address')
       | Address:
     br
-    input(type='text', id='address', name='address')
+    input(type='text', id='address', name='address', placeholder="enter your address here",)
 
     br
     label(for='password')
       | Password:
     br
-    input(type='password', id='password', name='password', required)
+    input(type='password', id='password', name='password', placeholder="password must be at least 6 character", required)
 
     .btn-wrapper
       button(type='submit') Signup
+  
+  script(src="../js/signup.js") 
 
 
     

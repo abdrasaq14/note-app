@@ -8,10 +8,11 @@ import express, {
 import { ZodError, z } from "zod";
 import bcrypt from "bcrypt";
 import path from "node:path";
+import { generateUUID } from "./uuidFunction";
 
 const sqlite3 = require("sqlite3").verbose();
 // my database
-const mydpPath = path.resolve(__dirname, "../", "usersAndNote.db");
+const mydpPath = path.resolve(__dirname, "../../../", "model/usersAndNote.db");
 const db = new sqlite3.Database(
   mydpPath,
   sqlite3.OPEN_READWRITE,
@@ -36,7 +37,7 @@ const newUserSchema = z.object({
       invalid_type_error: "email needs to be a string",
     })
     .email(),
-  gender: z.string().max(1),
+  gender: z.string().max(6),
   phone: z.string().max(14),
   address: z.string().min(10).max(100),
   password: z
@@ -81,28 +82,36 @@ export async function signupUserFunction(
     } else {
       // Encrypt password
       const hashedPassword = await bcrypt.hash(password, 10);
-
+      const generateUserID: string = generateUUID();
       // Store the new user
       const insertSql = `INSERT INTO Users (
-         Full_name, 
-         Gender, 
-         Email, 
-         Phone_no, 
-         Address,
-         Password
+          UserId, 
+          Full_name,
+          Gender, 
+          Email, 
+          Phone_no, 
+          Address,
+          Password
          ) 
-         VALUES (?,?,?,?,?,?)`;
+         VALUES (?,?,?,?,?,?,?)`;
       const insertUserDetailIntoDatabase = await new Promise(
         (resolve, reject) => {
           db.run(
             insertSql,
-            [fullname, gender, email, phone, address, hashedPassword],
+            [
+              generateUserID,
+              fullname,
+              gender,
+              email,
+              phone,
+              address,
+              hashedPassword,
+            ],
             function (err: Error) {
               if (err) {
                 // return `Error in database operation: ${err}`;
                 reject(err);
               } else {
-                
                 resolve(`New User with ${email} created`);
               }
             }

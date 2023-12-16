@@ -18,12 +18,31 @@ form{
   height: 50%;
   width: 30%;
   padding: 3rem;
+  border-radius: 20px;
 }
 
-h1 {
+.existing-note-wrapper{
+  width: 100%;
+  height: 4rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.existing-note{
+  font-weight: 900;
   text-align: center;
   color: #042651;
-  margin-bottom: 3rem;
+  z-index: 10000;
+}
+
+.existing-note-img{
+  position: absolute;
+  top: 70%;
+
 }
 
 label {
@@ -39,6 +58,14 @@ input {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+input::placeholder{
+  opacity: .5;
+}
+
+#email{
+  margin-bottom: 1rem;
 }
 
 .zod-error, .database-error, .no-such-user-error{
@@ -73,17 +100,19 @@ input {
 button {
   background: linear-gradient(to bottom, rgba(4, 38, 81), rgb(40, 4, 81));
   color: white;
-  padding: .7rem 4rem;
+  width: 95%;
+  height: 2.5rem;
   border: none;
   border-radius: 50px;
-  margin-top: 2rem;
+  margin-top: 15%;
   cursor: pointer;
   font-size: 1rem;
   transition: .8s;
+  
 }
 button:hover{
   box-shadow: 15px 15px 15px #04255160;
   background: linear-gradient(to bottom, rgb(40, 4, 81), rgba(4, 38, 81));
   transition: .8s;
-  transform: scale(1.2)
+  transform: scale(1.1)
 }

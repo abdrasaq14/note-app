@@ -1,4 +1,5 @@
 import express from "express";
+import { displayIndex } from "../controller/indexDisplay";
 import { getNoteFunction } from "../controller/noteController";
 import { Response, Request } from "express";
 
@@ -10,8 +11,6 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: false }));
 
 /* GET home page. */
-router.get('/', (req:Request, res:Response)=>{
-    res.render("index", {})
-});
+router.get('/', displayIndex);
 
 export default router;

@@ -2,16 +2,16 @@ import { Request, Response, NextFunction } from "express";
 import { ZodError, z } from "zod";
 import { AuthenticatedRequest } from "../../express";
 import path from "node:path";
-
-//const jwtSecret = process.env.JWT_SECRET!;
-// my database
-const mydpPath = path.resolve(__dirname, "../", "usersAndNote.db");
+import { generateUUID } from "./uuidFunction";
 const sqlite3 = require("sqlite3").verbose();
+
+// my database
+const mydpPath = path.resolve(__dirname, "../../../", "model/usersAndNote.db");
 const db = new sqlite3.Database(
   mydpPath,
   sqlite3.OPEN_READWRITE,
   (err: any) => {
-    if (err) return err;
+    if (err) return console.log(err);
   }
 );
 /* GET ALL NOTES listing (HOMEPAGE). */
@@ -70,10 +70,10 @@ export async function getIndividualNoteFunction(
         }
       });
     });
-    
+
     const token = req.session.token;
     res.render("dashboard", { notes, queryUserTable });
-    
+
     next();
   } catch (error) {
     res.render("dashboard", { error }); // Render an error message
@@ -113,24 +113,26 @@ export const createNewNoteFunction = async (
     that the current userid can be append to the note created*/
 
     const userId = req.user?.UserId;
+    const generateNoteID = generateUUID().slice(9, 13);
     const sql = `INSERT INTO Notes (
-    Title, 
-    description, 
-    DueDate, 
-    Status,
-    UserId
+      NoteId,
+      Title,
+      Description, 
+      DueDate, 
+      Status,
+      UserId
     ) 
-    VALUES (?,?,?,?,?)`;
+    VALUES (?,?,?,?,?,?)`;
 
     if (userId === undefined) {
       const undefinedUserId = `userId undefined, I don't know how you get here`;
-     
+
       console.log(userId);
     } else {
       const createNewNote = await new Promise((resolve, reject) => {
         db.run(
           sql,
-          [Title, Description, DueDate, Status, userId],
+          [generateNoteID, Title, Description, DueDate, Status, userId],
           function (err: Error) {
             if (err) {
               reject(err);
@@ -142,7 +144,6 @@ export const createNewNoteFunction = async (
               req.newUserId = { UserId: userId };
               res.redirect("/notes/dashboard");
               next();
-              
             }
           }
         );
@@ -158,7 +159,7 @@ export const createNewNoteFunction = async (
 
 // zod to validate new input
 const putNotesObjectSchema = z.object({
-  title: z
+  Title: z
     .string({
       required_error: "Title needs to be provided",
       invalid_type_error: "Title needs to be a string",
@@ -166,9 +167,9 @@ const putNotesObjectSchema = z.object({
     .trim()
     .min(2, "Title need to have a min length of 2")
     .max(200, "Title need to have a max length of 200"),
-  description: z.string(),
-  dueDate: z.string().trim(),
-  status: z
+  Description: z.string(),
+  DueDate: z.string().trim(),
+  Status: z
     .string({
       required_error: "kindly indicate the status",
     })
@@ -184,22 +185,34 @@ export const putNewNoteFunction = async (
 ) => {
   try {
     const validation = putNotesObjectSchema.parse(req.body);
-    const { title, description, dueDate, status } = validation;
+    const { Title, Description, DueDate, Status } = validation;
     const noteId = req.body.noteId;
-    const sql = `UPDATE Notes SET Title = ?, Description = ?, DueDate = ?, Status =? WHERE NoteId = ${noteId}`;
+
+    const sql = `UPDATE Notes 
+    SET
+      Title = ?,
+      Description = ?,
+      DueDate = ?,
+      Status = ?
+    WHERE
+      NoteId = ?`;
 
     const insertUpdateNote = await new Promise((resolve, reject) => {
-      db.run(sql, [title, description, dueDate, status], function (err: Error) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(`note updated successfully`);
-          //req.jwtSecret = {secretKey: jwtSecret}
-          const token = req.session.token;
-          
-          res.redirect("/notes/dashboard");
+      db.run(
+        sql,
+        [Title, Description, DueDate, Status, noteId],
+        function (err: Error) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(`note updated successfully`);
+            //req.jwtSecret = {secretKey: jwtSecret}
+            const token = req.session.token;
+
+            res.redirect("/notes/dashboard");
+          }
         }
-      });
+      );
     });
   } catch (error) {
     if (error instanceof ZodError) {
@@ -217,15 +230,15 @@ export async function deleteNoteFunction(
   next: NextFunction
 ) {
   try {
-    const { noteId } = req.body;
+    const { noteCode } = req.body;
     const sql = `DELETE FROM Notes WHERE NoteCode = ?`;
 
     const deletedNotes = await new Promise((resolve, reject) => {
-      db.run(sql, [noteId], function (err: Error) {
+      db.run(sql, [noteCode], function (err: Error) {
         if (err) {
           reject(err); // Reject with the error
         } else {
-          resolve(`note with ${noteId} deleted successfully`); // Resolve with the data
+          resolve(`note with ${noteCode} deleted successfully`); // Resolve with the data
         }
       });
     });

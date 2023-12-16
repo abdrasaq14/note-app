@@ -8,8 +8,6 @@ import { noCache } from "../middleware/no-catching";
 const router = express.Router();
 
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: false }));
 
 /* GET NOTES listing. */
 router.get("/", getNoteFunction);

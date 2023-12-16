@@ -9,9 +9,8 @@ import path from "node:path";
 import { AuthenticatedRequest } from "../../express";
 
 const sqlite3 = require("sqlite3").verbose();
-
 // my database
-const mydpPath = path.resolve(__dirname, "../", "usersAndNote.db");
+const mydpPath = path.resolve(__dirname, "../../../", "model/usersAndNote.db");
 const db = new sqlite3.Database(
   mydpPath,
   sqlite3.OPEN_READWRITE,

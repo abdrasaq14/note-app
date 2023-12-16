@@ -10,8 +10,6 @@ import session from "express-session";
 // implementation start here
 const router = express.Router();
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: false }));
 
 // GET all users route
 router.get("/signup", signupPage);

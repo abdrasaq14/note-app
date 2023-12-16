@@ -3,10 +3,9 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import path from 'node:path'
 
-
 const sqlite3 = require("sqlite3").verbose();
 // my database
-const mydpPath = path.resolve(__dirname, '../', 'usersAndNote.db')
+const mydpPath = path.resolve(__dirname, "../../../", "model/usersAndNote.db");
 const db = new sqlite3.Database(
   mydpPath,
   sqlite3.OPEN_READWRITE,
@@ -23,11 +22,11 @@ async function authenticate(req: AuthenticatedRequest, res: Response, next: Next
   }
 
   try {
-    const decoded = jwt.verify(token, 'your-secret-key') as { userId: number };
+    const decoded = jwt.verify(token, 'your-secret-key') as { userId: string };
     const queryUser = `SELECT UserId FROM Users WHERE UserId = ?`; 
-    const userIdFromDatabase:Record<string, number> = {}
-    const selectedUserId: Record<string, number>[] = await new Promise((resolve, reject)=>{
-        db.all(queryUser, [decoded.userId], (err:Error, userReturned:Record<string, number>[])=>{
+    const userIdFromDatabase:Record<string, string> = {}
+    const selectedUserId: Record<string, string>[] = await new Promise((resolve, reject)=>{
+        db.all(queryUser, [decoded.userId], (err:Error, userReturned:Record<string, string>[])=>{
             if(err){
                 reject(res.status(500).json({
                     message: `userId not found`
